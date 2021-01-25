@@ -124,6 +124,44 @@ public:
   CsInfo&
   setNMisses(uint64_t nMisses);
 
+  std::string
+  getPolicyName() const {
+    return m_policyName;
+  }
+
+  CsInfo&
+  setPolicyName(std::string& policyName);
+
+  uint64_t getMinSize() const {
+    return m_minSize;
+  }
+
+  CsInfo&
+  setMinSize(uint64_t minSize);
+
+  uint64_t getMaxSize() const {
+    return m_maxSize;
+  }
+
+  CsInfo&
+  setMaxSize(uint64_t maxSize);
+
+  float
+  getAverageSize() const {
+    return m_minSize;
+  }
+
+  CsInfo&
+  setAverageSize(float averageSize);
+
+  float
+  getStdDevSize() const {
+    return m_stdDevSize;
+  }
+
+  CsInfo&
+  setStdDevSize(float stdDevSize);
+
 private:
   using FlagsBitSet = std::bitset<2>;
 
@@ -132,6 +170,12 @@ private:
   uint64_t m_nEntries;
   uint64_t m_nHits;
   uint64_t m_nMisses;
+
+  std::string m_policyName;
+  uint64_t m_minSize;
+  uint64_t m_maxSize;
+  float m_averageSize;
+  float m_stdDevSize;
 
   mutable Block m_wire;
 };

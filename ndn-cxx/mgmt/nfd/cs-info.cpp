@@ -177,6 +177,46 @@ CsInfo::setNMisses(uint64_t nMisses)
   return *this;
 }
 
+CsInfo&
+CsInfo::setPolicyName(std::string& policyName)
+{
+  m_wire.reset();
+  m_policyName = policyName;
+  return *this;
+}
+
+CsInfo&
+CsInfo::setMinSize(uint64_t minSize)
+{
+  m_wire.reset();
+  m_minSize = minSize;
+  return *this;
+}
+
+CsInfo&
+CsInfo::setMaxSize(uint64_t maxSize)
+{
+  m_wire.reset();
+  m_maxSize = maxSize;
+  return *this;
+}
+
+CsInfo&
+CsInfo::setAverageSize(float averageSize)
+{
+  m_wire.reset();
+  m_averageSize = averageSize;
+  return *this;
+}
+
+CsInfo&
+CsInfo::setStdDevSize(float stdDevSize)
+{
+  m_wire.reset();
+  m_stdDevSize = stdDevSize;
+  return *this;
+}
+
 bool
 operator==(const CsInfo& a, const CsInfo& b)
 {
@@ -196,7 +236,11 @@ operator<<(std::ostream& os, const CsInfo& csi)
             << (csi.getEnableAdmit() ? "admit enabled, " : "admit disabled, ")
             << (csi.getEnableServe() ? "serve enabled, " : "serve disabled, ")
             << csi.getNHits() << (csi.getNHits() == 1 ? " hit, " : " hits, ")
-            << csi.getNMisses() << (csi.getNMisses() == 1 ? " miss" : " misses");
+            << csi.getNMisses() << (csi.getNMisses() == 1 ? " miss" : " misses")
+            << csi.getPolicyName() << " policy, " << csi.getMinSize() << " min entry size"
+            << csi.getMaxSize() << " max entry size, "
+            << csi.getAverageSize() << " avg entry size, "
+            << csi.getStdDevSize() << " entry size std dev";
 }
 
 } // namespace nfd
