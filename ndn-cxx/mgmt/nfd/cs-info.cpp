@@ -178,7 +178,7 @@ CsInfo::setNMisses(uint64_t nMisses)
 }
 
 CsInfo&
-CsInfo::setPolicyName(std::string& policyName)
+CsInfo::setPolicyName(const std::string& policyName)
 {
   m_wire.reset();
   m_policyName = policyName;

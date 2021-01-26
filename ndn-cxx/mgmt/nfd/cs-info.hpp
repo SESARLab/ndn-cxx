@@ -130,7 +130,7 @@ public:
   }
 
   CsInfo&
-  setPolicyName(std::string& policyName);
+  setPolicyName(const std::string& policyName);
 
   uint64_t getMinSize() const {
     return m_minSize;
