@@ -25,6 +25,8 @@
 #include "ndn-cxx/encoding/tlv-nfd.hpp"
 #include "ndn-cxx/util/concepts.hpp"
 
+#include <iostream>
+
 namespace ndn {
 namespace nfd {
 
@@ -35,6 +37,11 @@ CsInfo::CsInfo()
   , m_nEntries(0)
   , m_nHits(0)
   , m_nMisses(0)
+  , m_policyName("")
+  , m_minSize(std::numeric_limits<uint64_t>::max())
+  , m_maxSize(0)
+  , m_averageSize(0.0)
+  , m_stdDevSize(0.0)
 {
 }
 
@@ -49,11 +56,18 @@ CsInfo::wireEncode(EncodingImpl<TAG>& encoder) const
 {
   size_t totalLength = 0;
 
+  std::cout << *this << std::endl;
+
   totalLength += prependNonNegativeIntegerBlock(encoder, tlv::nfd::NMisses, m_nMisses);
   totalLength += prependNonNegativeIntegerBlock(encoder, tlv::nfd::NHits, m_nHits);
   totalLength += prependNonNegativeIntegerBlock(encoder, tlv::nfd::NCsEntries, m_nEntries);
   totalLength += prependNonNegativeIntegerBlock(encoder, tlv::nfd::Flags, m_flags.to_ullong());
   totalLength += prependNonNegativeIntegerBlock(encoder, tlv::nfd::Capacity, m_capacity);
+  totalLength += prependStringBlock(encoder, tlv::nfd::PolicyName, m_policyName);
+  totalLength += prependNonNegativeIntegerBlock(encoder, tlv::nfd::MinSize, m_minSize);
+  totalLength += prependNonNegativeIntegerBlock(encoder, tlv::nfd::MaxSize, m_maxSize);
+  totalLength += prependStringBlock(encoder, tlv::nfd::AverageSize, std::to_string(m_averageSize));
+  totalLength += prependStringBlock(encoder, tlv::nfd::StdDevSize, std::to_string(m_stdDevSize));
 
   totalLength += encoder.prependVarNumber(totalLength);
   totalLength += encoder.prependVarNumber(tlv::nfd::CsInfo);
@@ -87,6 +101,46 @@ CsInfo::wireDecode(const Block& block)
   m_wire = block;
   m_wire.parse();
   auto val = m_wire.elements_begin();
+
+  if (val != m_wire.elements_end() && val->type() == tlv::nfd::StdDevSize) {
+    m_stdDevSize = std::stof(readString(*val));
+    ++val;
+  }
+  else {
+    NDN_THROW(Error("missing required StdDevSize field"));
+  }
+
+  if (val != m_wire.elements_end() && val->type() == tlv::nfd::AverageSize) {
+    m_averageSize = std::stof(readString(*val));
+    ++val;
+  }
+  else {
+    NDN_THROW(Error("missing required AverageSize field"));
+  }
+
+  if (val != m_wire.elements_end() && val->type() == tlv::nfd::MaxSize) {
+    m_maxSize = readNonNegativeInteger(*val);
+    ++val;
+  }
+  else {
+    NDN_THROW(Error("missing required MaxSize field"));
+  }
+
+  if (val != m_wire.elements_end() && val->type() == tlv::nfd::MinSize) {
+    m_minSize = readNonNegativeInteger(*val);
+    ++val;
+  }
+  else {
+    NDN_THROW(Error("missing required MinSize field"));
+  }
+
+  if (val != m_wire.elements_end() && val->type() == tlv::nfd::PolicyName) {
+    m_policyName = readString(*val);
+    ++val;
+  }
+  else {
+    NDN_THROW(Error("missing required PolicyName field"));
+  }
 
   if (val != m_wire.elements_end() && val->type() == tlv::nfd::Capacity) {
     m_capacity = readNonNegativeInteger(*val);
@@ -225,7 +279,12 @@ operator==(const CsInfo& a, const CsInfo& b)
       a.getEnableServe() == b.getEnableServe() &&
       a.getNEntries() == b.getNEntries() &&
       a.getNHits() == b.getNHits() &&
-      a.getNMisses() == b.getNMisses();
+      a.getNMisses() == b.getNMisses() &&
+      a.getPolicyName() == b.getPolicyName() &&
+      a.getMinSize() == b.getMinSize() &&
+      a.getMaxSize() == b.getMaxSize() &&
+      a.getAverageSize() == b.getAverageSize() &&
+      a.getStdDevSize() == b.getStdDevSize();
 }
 
 std::ostream&
@@ -236,8 +295,8 @@ operator<<(std::ostream& os, const CsInfo& csi)
             << (csi.getEnableAdmit() ? "admit enabled, " : "admit disabled, ")
             << (csi.getEnableServe() ? "serve enabled, " : "serve disabled, ")
             << csi.getNHits() << (csi.getNHits() == 1 ? " hit, " : " hits, ")
-            << csi.getNMisses() << (csi.getNMisses() == 1 ? " miss" : " misses")
-            << csi.getPolicyName() << " policy, " << csi.getMinSize() << " min entry size"
+            << csi.getNMisses() << (csi.getNMisses() == 1 ? " miss" : " misses, ")
+            << csi.getPolicyName() << " policy, " << csi.getMinSize() << " min entry size, "
             << csi.getMaxSize() << " max entry size, "
             << csi.getAverageSize() << " avg entry size, "
             << csi.getStdDevSize() << " entry size std dev";

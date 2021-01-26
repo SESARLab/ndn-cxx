@@ -91,6 +91,12 @@ enum {
   NHits   = 129,
   NMisses = 130,
 
+  PolicyName          = 131,
+  MinSize             = 132,
+  MaxSize             = 133,
+  AverageSize         = 134,
+  StdDevSize          = 136,
+
   // FIB Management
   FibEntry      = 128,
   NextHopRecord = 129,

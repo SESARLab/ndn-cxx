@@ -148,7 +148,7 @@ public:
 
   float
   getAverageSize() const {
-    return m_minSize;
+    return m_averageSize;
   }
 
   CsInfo&
@@ -171,6 +171,7 @@ private:
   uint64_t m_nHits;
   uint64_t m_nMisses;
 
+  /* Custom fields */
   std::string m_policyName;
   uint64_t m_minSize;
   uint64_t m_maxSize;
