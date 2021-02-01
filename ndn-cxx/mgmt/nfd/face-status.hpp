@@ -218,6 +218,150 @@ public: // getters & setters
   FaceStatus&
   setNOutBytes(uint64_t nOutBytes);
 
+  uint64_t
+  get_interest_packet_size_min() const
+  {
+    return m_interest_packet_size_min;
+  }
+
+  FaceStatus&
+  set_interest_packet_size_min(uint64_t interest_packet_size_min);
+
+  uint64_t
+  get_interest_packet_size_max() const
+  {
+    return m_interest_packet_size_max;
+  }
+
+  FaceStatus&
+  set_interest_packet_size_max(uint64_t interest_packet_size_max);
+
+  std::string
+  get_interest_packet_size_avg() const
+  {
+    return m_interest_packet_size_avg;
+  }
+
+  FaceStatus&
+  set_interest_packet_size_avg(std::string interest_packet_size_avg);
+
+  std::string
+  get_interest_packet_size_std_dev() const
+  {
+    return m_interest_packet_size_std_dev;
+  }
+
+  FaceStatus&
+  set_interest_packet_size_std_dev(std::string interest_packet_size_std_dev);
+
+  uint64_t
+  get_data_packet_size_min() const
+  {
+    return m_data_packet_size_min;
+  }
+
+  FaceStatus&
+  set_data_packet_size_min(uint64_t data_packet_size_min);
+
+  uint64_t
+  get_data_packet_size_max() const
+  {
+    return m_data_packet_size_max;
+  }
+
+  FaceStatus&
+  set_data_packet_size_max(uint64_t data_packet_size_max);
+
+  std::string
+  get_data_packet_size_avg() const
+  {
+    return m_data_packet_size_avg;
+  }
+
+  FaceStatus&
+  set_data_packet_size_avg(std::string data_packet_size_avg);
+
+  std::string
+  get_data_packet_size_std_dev() const
+  {
+    return m_data_packet_size_std_dev;
+  }
+
+  FaceStatus&
+  set_data_packet_size_std_dev(std::string data_packet_size_std_dev);
+
+  uint64_t
+  get_interest_packet_components_min() const
+  {
+    return m_interest_packet_components_min;
+  }
+
+  FaceStatus&
+  set_interest_packet_components_min(uint64_t interest_packet_components_min);
+
+  uint64_t
+  get_interest_packet_components_max() const
+  {
+    return m_interest_packet_components_max;
+  }
+
+  FaceStatus&
+  set_interest_packet_components_max(uint64_t interest_packet_components_max);
+
+  std::string
+  get_interest_packet_components_avg() const
+  {
+    return m_interest_packet_components_avg;
+  }
+
+  FaceStatus&
+  set_interest_packet_components_avg(std::string interest_packet_components_avg);
+
+  std::string
+  get_interest_packet_components_std_dev() const
+  {
+    return m_interest_packet_components_std_dev;
+  }
+
+  FaceStatus&
+  set_interest_packet_components_std_dev(std::string interest_packet_components_std_dev);
+
+  uint64_t
+  get_data_packet_components_min() const
+  {
+    return m_data_packet_components_min;
+  }
+
+  FaceStatus&
+  set_data_packet_components_min(uint64_t data_packet_components_min);
+
+  uint64_t
+  get_data_packet_components_max() const
+  {
+    return m_data_packet_components_max;
+  }
+
+  FaceStatus&
+  set_data_packet_components_max(uint64_t data_packet_components_max);
+
+  std::string
+  get_data_packet_components_avg() const
+  {
+    return m_data_packet_components_avg;
+  }
+
+  FaceStatus&
+  set_data_packet_components_avg(std::string data_packet_components_avg);
+
+  std::string
+  get_data_packet_components_std_dev() const
+  {
+    return m_data_packet_components_std_dev;
+  }
+
+  FaceStatus&
+  set_data_packet_components_std_dev(std::string data_packet_components_std_dev);
+
 private:
   optional<time::milliseconds> m_expirationPeriod;
   optional<time::nanoseconds> m_baseCongestionMarkingInterval;
@@ -231,6 +375,23 @@ private:
   uint64_t m_nOutNacks;
   uint64_t m_nInBytes;
   uint64_t m_nOutBytes;
+
+  uint64_t m_interest_packet_size_min;
+  uint64_t m_interest_packet_size_max;
+  std::string m_interest_packet_size_avg;
+  std::string m_interest_packet_size_std_dev;
+  uint64_t m_data_packet_size_min;
+  uint64_t m_data_packet_size_max;
+  std::string m_data_packet_size_avg;
+  std::string m_data_packet_size_std_dev;
+  uint64_t m_interest_packet_components_min;
+  uint64_t m_interest_packet_components_max;
+  std::string m_interest_packet_components_avg;
+  std::string m_interest_packet_components_std_dev;
+  uint64_t m_data_packet_components_min;
+  uint64_t m_data_packet_components_max;
+  std::string m_data_packet_components_avg;
+  std::string m_data_packet_components_std_dev;
 };
 
 NDN_CXX_DECLARE_WIRE_ENCODE_INSTANTIATIONS(FaceStatus);
