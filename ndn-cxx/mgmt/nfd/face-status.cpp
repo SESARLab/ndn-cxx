@@ -40,22 +40,22 @@ FaceStatus::FaceStatus()
   , m_nOutNacks(0)
   , m_nInBytes(0)
   , m_nOutBytes(0)
-  , m_interest_packet_size_min(std::numeric_limits<uint64_t>::max())
+  , m_interest_packet_size_min(0)
   , m_interest_packet_size_max(0)
-  , m_interest_packet_size_avg("")
-  , m_interest_packet_size_std_dev("")
-  , m_data_packet_size_min(std::numeric_limits<uint64_t>::max())
+  , m_interest_packet_size_avg(0.0)
+  , m_interest_packet_size_std_dev(0.0)
+  , m_data_packet_size_min(0)
   , m_data_packet_size_max(0)
-  , m_data_packet_size_avg("")
-  , m_data_packet_size_std_dev("")
-  , m_interest_packet_components_min(std::numeric_limits<uint64_t>::max())
+  , m_data_packet_size_avg(0.0)
+  , m_data_packet_size_std_dev(0.0)
+  , m_interest_packet_components_min(0)
   , m_interest_packet_components_max(0)
-  , m_interest_packet_components_avg("")
-  , m_interest_packet_components_std_dev("")
-  , m_data_packet_components_min(std::numeric_limits<uint64_t>::max())
+  , m_interest_packet_components_avg(0.0)
+  , m_interest_packet_components_std_dev(0.0)
+  , m_data_packet_components_min(0)
   , m_data_packet_components_max(0)
-  , m_data_packet_components_avg("")
-  , m_data_packet_components_std_dev("")
+  , m_data_packet_components_avg(0.0)
+  , m_data_packet_components_std_dev(0.0)
 {
 }
 
@@ -70,20 +70,20 @@ FaceStatus::wireEncode(EncodingImpl<TAG>& encoder) const
 {
   size_t totalLength = 0;
 
-  totalLength += prependStringBlock(encoder, tlv::nfd::DataComponentSizeStdDev, m_data_packet_components_std_dev);
-  totalLength += prependStringBlock(encoder, tlv::nfd::DataComponentSizeAvg, m_data_packet_components_avg);
+  totalLength += prependStringBlock(encoder, tlv::nfd::DataComponentSizeStdDev, std::to_string(m_data_packet_components_std_dev));
+  totalLength += prependStringBlock(encoder, tlv::nfd::DataComponentSizeAvg, std::to_string(m_data_packet_components_avg));
   totalLength += prependNonNegativeIntegerBlock(encoder, tlv::nfd::DataComponentSizeMax, m_data_packet_components_max);
   totalLength += prependNonNegativeIntegerBlock(encoder, tlv::nfd::DataComponentSizeMin, m_data_packet_components_min);
-  totalLength += prependStringBlock(encoder, tlv::nfd::InterestComponentSizeStdDev, m_interest_packet_components_std_dev);
-  totalLength += prependStringBlock(encoder, tlv::nfd::InterestComponentSizeAvg, m_interest_packet_components_avg);
+  totalLength += prependStringBlock(encoder, tlv::nfd::InterestComponentSizeStdDev, std::to_string(m_interest_packet_components_std_dev));
+  totalLength += prependStringBlock(encoder, tlv::nfd::InterestComponentSizeAvg, std::to_string(m_interest_packet_components_avg));
   totalLength += prependNonNegativeIntegerBlock(encoder, tlv::nfd::InterestComponentSizeMax, m_interest_packet_components_max);
   totalLength += prependNonNegativeIntegerBlock(encoder, tlv::nfd::InterestComponentSizeMin, m_interest_packet_components_min);
-  totalLength += prependStringBlock(encoder, tlv::nfd::DataPacketSizeStdDev, m_data_packet_size_std_dev);
-  totalLength += prependStringBlock(encoder, tlv::nfd::DataPacketSizeAvg, m_data_packet_size_avg);
+  totalLength += prependStringBlock(encoder, tlv::nfd::DataPacketSizeStdDev, std::to_string(m_data_packet_size_std_dev));
+  totalLength += prependStringBlock(encoder, tlv::nfd::DataPacketSizeAvg, std::to_string(m_data_packet_size_avg));
   totalLength += prependNonNegativeIntegerBlock(encoder, tlv::nfd::DataPacketSizeMax, m_data_packet_size_max);
   totalLength += prependNonNegativeIntegerBlock(encoder, tlv::nfd::DataPacketSizeMin, m_data_packet_size_min);
-  totalLength += prependStringBlock(encoder, tlv::nfd::InterestPacketSizeStdDev, m_interest_packet_size_std_dev);
-  totalLength += prependStringBlock(encoder, tlv::nfd::InterestPacketSizeAvg, m_interest_packet_size_avg);
+  totalLength += prependStringBlock(encoder, tlv::nfd::InterestPacketSizeStdDev, std::to_string(m_interest_packet_size_std_dev));
+  totalLength += prependStringBlock(encoder, tlv::nfd::InterestPacketSizeAvg, std::to_string(m_interest_packet_size_avg));
   totalLength += prependNonNegativeIntegerBlock(encoder, tlv::nfd::InterestPacketSizeMax, m_interest_packet_size_max);
   totalLength += prependNonNegativeIntegerBlock(encoder, tlv::nfd::InterestPacketSizeMin, m_interest_packet_size_min);
 
@@ -321,7 +321,7 @@ FaceStatus::wireDecode(const Block& block)
   }
 
   if (val != m_wire.elements_end() && val->type() == tlv::nfd::InterestPacketSizeAvg) {
-    m_interest_packet_size_avg = readNonNegativeInteger(*val);
+    m_interest_packet_size_avg = std::stof(readString(*val));
     ++val;
   }
   else {
@@ -329,7 +329,7 @@ FaceStatus::wireDecode(const Block& block)
   }
 
   if (val != m_wire.elements_end() && val->type() == tlv::nfd::InterestPacketSizeStdDev) {
-    m_interest_packet_size_std_dev = readNonNegativeInteger(*val);
+    m_interest_packet_size_std_dev = std::stof(readString(*val));
     ++val;
   }
   else {
@@ -353,7 +353,7 @@ FaceStatus::wireDecode(const Block& block)
   }
 
   if (val != m_wire.elements_end() && val->type() == tlv::nfd::DataPacketSizeAvg) {
-    m_data_packet_size_avg = readNonNegativeInteger(*val);
+    m_data_packet_size_avg = std::stof(readString(*val));
     ++val;
   }
   else {
@@ -361,7 +361,7 @@ FaceStatus::wireDecode(const Block& block)
   }
 
   if (val != m_wire.elements_end() && val->type() == tlv::nfd::DataPacketSizeStdDev) {
-    m_data_packet_size_std_dev = readNonNegativeInteger(*val);
+    m_data_packet_size_std_dev = std::stof(readString(*val));
     ++val;
   }
   else {
@@ -385,7 +385,7 @@ FaceStatus::wireDecode(const Block& block)
   }
 
   if (val != m_wire.elements_end() && val->type() == tlv::nfd::InterestComponentSizeAvg) {
-    m_interest_packet_components_avg = readNonNegativeInteger(*val);
+    m_interest_packet_components_avg = std::stof(readString(*val));
     ++val;
   }
   else {
@@ -393,7 +393,7 @@ FaceStatus::wireDecode(const Block& block)
   }
 
   if (val != m_wire.elements_end() && val->type() == tlv::nfd::InterestComponentSizeStdDev) {
-    m_interest_packet_components_std_dev = readNonNegativeInteger(*val);
+    m_interest_packet_components_std_dev = std::stof(readString(*val));
     ++val;
   }
   else {
@@ -417,7 +417,7 @@ FaceStatus::wireDecode(const Block& block)
   }
 
   if (val != m_wire.elements_end() && val->type() == tlv::nfd::DataComponentSizeAvg) {
-    m_data_packet_components_avg = readNonNegativeInteger(*val);
+    m_data_packet_components_avg = std::stof(readString(*val));
     ++val;
   }
   else {
@@ -425,7 +425,7 @@ FaceStatus::wireDecode(const Block& block)
   }
 
   if (val != m_wire.elements_end() && val->type() == tlv::nfd::DataComponentSizeStdDev) {
-    m_data_packet_components_std_dev = readNonNegativeInteger(*val);
+    m_data_packet_components_std_dev = std::stof(readString(*val));
     ++val;
   }
   else {
@@ -579,7 +579,7 @@ FaceStatus::set_interest_packet_size_max(uint64_t interest_packet_size_max)
 }
 
 FaceStatus&
-FaceStatus::set_interest_packet_size_avg(std::string interest_packet_size_avg)
+FaceStatus::set_interest_packet_size_avg(float interest_packet_size_avg)
 {
   m_wire.reset();
   m_interest_packet_size_avg = interest_packet_size_avg;
@@ -587,7 +587,7 @@ FaceStatus::set_interest_packet_size_avg(std::string interest_packet_size_avg)
 }
 
 FaceStatus&
-FaceStatus::set_interest_packet_size_std_dev(std::string interest_packet_size_std_dev)
+FaceStatus::set_interest_packet_size_std_dev(float interest_packet_size_std_dev)
 {
   m_wire.reset();
   m_interest_packet_size_std_dev = interest_packet_size_std_dev;
@@ -611,7 +611,7 @@ FaceStatus::set_data_packet_size_max(uint64_t data_packet_size_max)
 }
 
 FaceStatus&
-FaceStatus::set_data_packet_size_avg(std::string data_packet_size_avg)
+FaceStatus::set_data_packet_size_avg(float data_packet_size_avg)
 {
   m_wire.reset();
   m_data_packet_size_avg = data_packet_size_avg;
@@ -619,7 +619,7 @@ FaceStatus::set_data_packet_size_avg(std::string data_packet_size_avg)
 }
 
 FaceStatus&
-FaceStatus::set_data_packet_size_std_dev(std::string data_packet_size_std_dev)
+FaceStatus::set_data_packet_size_std_dev(float data_packet_size_std_dev)
 {
   m_wire.reset();
   m_data_packet_size_std_dev = data_packet_size_std_dev;
@@ -643,7 +643,7 @@ FaceStatus::set_interest_packet_components_max(uint64_t interest_packet_componen
 }
 
 FaceStatus&
-FaceStatus::set_interest_packet_components_avg(std::string interest_packet_components_avg)
+FaceStatus::set_interest_packet_components_avg(float interest_packet_components_avg)
 {
   m_wire.reset();
   m_interest_packet_components_avg = interest_packet_components_avg;
@@ -651,7 +651,7 @@ FaceStatus::set_interest_packet_components_avg(std::string interest_packet_compo
 }
 
 FaceStatus&
-FaceStatus::set_interest_packet_components_std_dev(std::string interest_packet_components_std_dev)
+FaceStatus::set_interest_packet_components_std_dev(float interest_packet_components_std_dev)
 {
   m_wire.reset();
   m_interest_packet_components_std_dev = interest_packet_components_std_dev;
@@ -675,7 +675,7 @@ FaceStatus::set_data_packet_components_max(uint64_t data_packet_components_max)
 }
 
 FaceStatus&
-FaceStatus::set_data_packet_components_avg(std::string data_packet_components_avg)
+FaceStatus::set_data_packet_components_avg(float data_packet_components_avg)
 {
   m_wire.reset();
   m_data_packet_components_avg = data_packet_components_avg;
@@ -683,7 +683,7 @@ FaceStatus::set_data_packet_components_avg(std::string data_packet_components_av
 }
 
 FaceStatus&
-FaceStatus::set_data_packet_components_std_dev(std::string data_packet_components_std_dev)
+FaceStatus::set_data_packet_components_std_dev(float data_packet_components_std_dev)
 {
   m_wire.reset();
   m_data_packet_components_std_dev = data_packet_components_std_dev;
@@ -774,7 +774,7 @@ operator<<(std::ostream& os, const FaceStatus& status)
      << "                Nacks: {in: " << status.getNInNacks() << ", "
      << "out: " << status.getNOutNacks() << "},\n"
      << "                bytes: {in: " << status.getNInBytes() << ", "
-     << "out: " << status.getNOutBytes() << "}}\n" << ", "
+     << "out: " << status.getNOutBytes() << "}},\n"
      << "     Size: {Interests: {"
      << "min: " << status.get_interest_packet_size_min() << ", "
      << "max: " << status.get_interest_packet_size_max() << ", "
