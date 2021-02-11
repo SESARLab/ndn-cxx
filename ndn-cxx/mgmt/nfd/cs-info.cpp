@@ -56,8 +56,6 @@ CsInfo::wireEncode(EncodingImpl<TAG>& encoder) const
 {
   size_t totalLength = 0;
 
-  std::cout << *this << std::endl;
-
   totalLength += prependNonNegativeIntegerBlock(encoder, tlv::nfd::NMisses, m_nMisses);
   totalLength += prependNonNegativeIntegerBlock(encoder, tlv::nfd::NHits, m_nHits);
   totalLength += prependNonNegativeIntegerBlock(encoder, tlv::nfd::NCsEntries, m_nEntries);
