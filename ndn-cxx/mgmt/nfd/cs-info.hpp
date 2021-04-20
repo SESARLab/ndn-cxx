@@ -162,6 +162,20 @@ public:
   CsInfo&
   setStdDevSize(float stdDevSize);
 
+  uint64_t getValidSignaturePackets() const {
+    return m_validSignaturePackets;
+  }
+
+  CsInfo&
+  setValidSignaturePackets(uint64_t validSignaturePackets);
+
+  uint64_t getInvalidSignaturePackets() const {
+    return m_invalidSignaturePackets;
+  }
+
+  CsInfo&
+  setInvalidSignaturePackets(uint64_t invalidSignaturePackets);
+
 private:
   using FlagsBitSet = std::bitset<2>;
 
@@ -177,6 +191,8 @@ private:
   uint64_t m_maxSize;
   float m_averageSize;
   float m_stdDevSize;
+  uint64_t m_validSignaturePackets;
+  uint64_t m_invalidSignaturePackets;
 
   mutable Block m_wire;
 };

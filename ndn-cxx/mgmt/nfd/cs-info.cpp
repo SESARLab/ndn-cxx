@@ -269,6 +269,22 @@ CsInfo::setStdDevSize(float stdDevSize)
   return *this;
 }
 
+CsInfo&
+CsInfo::setValidSignaturePackets(uint64_t validSignaturePackets)
+{
+  m_wire.reset();
+  m_validSignaturePackets = validSignaturePackets;
+  return *this;
+}
+
+CsInfo&
+CsInfo::setInvalidSignaturePackets(uint64_t invalidSignaturePackets)
+{
+  m_wire.reset();
+  m_invalidSignaturePackets = invalidSignaturePackets;
+  return *this;
+}
+
 bool
 operator==(const CsInfo& a, const CsInfo& b)
 {
@@ -282,7 +298,9 @@ operator==(const CsInfo& a, const CsInfo& b)
       a.getMinSize() == b.getMinSize() &&
       a.getMaxSize() == b.getMaxSize() &&
       a.getAverageSize() == b.getAverageSize() &&
-      a.getStdDevSize() == b.getStdDevSize();
+      a.getStdDevSize() == b.getStdDevSize() &&
+      a.getValidSignaturePackets() == b.getValidSignaturePackets() &&
+      a.getInvalidSignaturePackets() == b.getInvalidSignaturePackets();
 }
 
 std::ostream&
@@ -297,7 +315,9 @@ operator<<(std::ostream& os, const CsInfo& csi)
             << csi.getPolicyName() << " policy, " << csi.getMinSize() << " min entry size, "
             << csi.getMaxSize() << " max entry size, "
             << csi.getAverageSize() << " avg entry size, "
-            << csi.getStdDevSize() << " entry size std dev";
+            << csi.getStdDevSize() << " entry size std dev"
+            << csi.getValidSignaturePackets() << " valid sig packets, "
+            << csi.getInvalidSignaturePackets() << " invalid sig packets";
 }
 
 } // namespace nfd

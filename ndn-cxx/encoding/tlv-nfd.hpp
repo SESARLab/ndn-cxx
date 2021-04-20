@@ -101,6 +101,8 @@ enum {
   DataComponentSizeMax = 160,
   DataComponentSizeAvg = 161,
   DataComponentSizeStdDev = 162,
+  ValidSignaturePackets = 163,
+  InvalidSignaturePackets = 164,
 
   // Content Store Management
   CsInfo  = 128,
