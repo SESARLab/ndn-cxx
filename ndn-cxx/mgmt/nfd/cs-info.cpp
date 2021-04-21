@@ -42,6 +42,8 @@ CsInfo::CsInfo()
   , m_maxSize(0)
   , m_averageSize(0.0)
   , m_stdDevSize(0.0)
+  , m_validSignaturePackets(0)
+  , m_invalidSignaturePackets(0)
 {
 }
 
@@ -66,6 +68,8 @@ CsInfo::wireEncode(EncodingImpl<TAG>& encoder) const
   totalLength += prependNonNegativeIntegerBlock(encoder, tlv::nfd::MaxSize, m_maxSize);
   totalLength += prependStringBlock(encoder, tlv::nfd::AverageSize, std::to_string(m_averageSize));
   totalLength += prependStringBlock(encoder, tlv::nfd::StdDevSize, std::to_string(m_stdDevSize));
+  totalLength += prependNonNegativeIntegerBlock(encoder, tlv::nfd::ValidSignaturePackets, m_validSignaturePackets);
+  totalLength += prependNonNegativeIntegerBlock(encoder, tlv::nfd::InvalidSignaturePackets, m_invalidSignaturePackets);
 
   totalLength += encoder.prependVarNumber(totalLength);
   totalLength += encoder.prependVarNumber(tlv::nfd::CsInfo);
@@ -99,6 +103,22 @@ CsInfo::wireDecode(const Block& block)
   m_wire = block;
   m_wire.parse();
   auto val = m_wire.elements_begin();
+
+  if (val != m_wire.elements_end() && val->type() == tlv::nfd::InvalidSignaturePackets) {
+    m_invalidSignaturePackets = readNonNegativeInteger(*val);
+    ++val;
+  }
+  else {
+    NDN_THROW(Error("missing required InvalidSignaturePackets field"));
+  }
+
+  if (val != m_wire.elements_end() && val->type() == tlv::nfd::ValidSignaturePackets) {
+    m_validSignaturePackets = readNonNegativeInteger(*val);
+    ++val;
+  }
+  else {
+    NDN_THROW(Error("missing required ValidSignaturePackets field"));
+  }
 
   if (val != m_wire.elements_end() && val->type() == tlv::nfd::StdDevSize) {
     m_stdDevSize = std::stof(readString(*val));
