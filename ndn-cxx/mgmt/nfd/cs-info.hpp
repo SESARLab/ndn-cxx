@@ -162,14 +162,16 @@ public:
   CsInfo&
   setStdDevSize(float stdDevSize);
 
-  uint64_t getValidSignaturePackets() const {
+  uint64_t
+  getValidSignaturePackets() const {
     return m_validSignaturePackets;
   }
 
   CsInfo&
   setValidSignaturePackets(uint64_t validSignaturePackets);
 
-  uint64_t getInvalidSignaturePackets() const {
+  uint64_t
+  getInvalidSignaturePackets() const {
     return m_invalidSignaturePackets;
   }
 

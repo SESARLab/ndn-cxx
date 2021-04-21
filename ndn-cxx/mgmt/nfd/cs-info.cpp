@@ -335,7 +335,7 @@ operator<<(std::ostream& os, const CsInfo& csi)
             << csi.getPolicyName() << " policy, " << csi.getMinSize() << " min entry size, "
             << csi.getMaxSize() << " max entry size, "
             << csi.getAverageSize() << " avg entry size, "
-            << csi.getStdDevSize() << " entry size std dev"
+            << csi.getStdDevSize() << " entry size std dev, "
             << csi.getValidSignaturePackets() << " valid sig packets, "
             << csi.getInvalidSignaturePackets() << " invalid sig packets";
 }
